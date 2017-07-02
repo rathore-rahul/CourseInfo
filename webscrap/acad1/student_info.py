@@ -1,5 +1,7 @@
 import pandas as pd
 import sys
+import gender
+import unicodedata
 
 def find_courses_by_student_name(name):
 	name = name.upper()
@@ -12,7 +14,7 @@ def find_courses_by_student_name(name):
 		if (cf['Student Name '] == name).any() == True:
 			courses.append(code)
 	return courses
-	
+
 def find_courses_by_student_id(student_id):
 	student_id = student_id.upper()
 	courses = []
