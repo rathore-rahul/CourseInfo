@@ -4,15 +4,15 @@ import pandas as pd
 import sys
 
 def generate_courses_sexratio():
-    output_file_name = 'courseSexRatio.csv'
+    output_file_name = 'data/courseSexRatio.csv'
     outputfile = open(output_file_name,'w')
     outputfile.write('CourseCode,femalesRatio\n')
     courses = []
-    df = pd.read_csv('CourseList.csv')
+    df = pd.read_csv('data/CourseList.csv')
     codeList = df['Course Code'].unique()
-    gendermap = pd.read_csv('studentname2gender.csv')
+    gendermap = pd.read_csv('data/studentname2gender.csv')
     for code in codeList:
-        fileName = code + '.csv'
+        fileName = 'data/'+ code + '.csv'
         cf = pd.read_csv(fileName)
         num_male = 0
         num_female = 0
@@ -34,14 +34,14 @@ def generate_courses_sexratio():
     outputfile.close()
 
 def studentname2gender():
-    outputfile = open('studentname2gender.csv','w')
+    outputfile = open('data/studentname2gender.csv','w')
     outputfile.write('Name,Gender\n')
-    df = pd.read_csv('CourseList.csv')
+    df = pd.read_csv('data/CourseList.csv')
     codeList = df['Course Code'].unique()
-    gendermap = pd.read_csv('firstname2gender.csv')
+    gendermap = pd.read_csv('data/firstname2gender.csv')
     studentList = set()
     for code in codeList:
-        fileName = code + '.csv'
+        fileName = 'data/' + code + '.csv'
         cf = pd.read_csv(fileName)
         for name in cf['Student Name ']:
             studentList.add(name)

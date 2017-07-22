@@ -13,23 +13,23 @@ def clean_html(raw_html):
 	cleanText = re.sub(cleanr,'',raw_html)
 	return cleanText
 
-def courses_list(userid,password):
+def courses_list(my_userid,my_passkey):
 	driver = webdriver.Firefox()
 	driver.get('https://academics1.iitd.ac.in')
 	username = driver.find_element_by_name('username')
-	username.send_keys(userid)
+	username.send_keys(my_userid)
 	password = driver.find_element_by_name('password')
-	password.send_keys(password)
+	password.send_keys(my_passkey)
 	login = driver.find_element_by_name('submit-button')
 	login.click()
-	link = driver.find_element_by_link_text('List of Offered Courses - Next Semester')
+	link = driver.find_element_by_link_text('List of Offered Courses - Current Semester')
 	link.click()
 	html = driver.page_source
 	soup = BS(html,"html.parser")
 	tables = soup.find_all('table')
 	coursesTable = tables[-1]
 	rows = [tr.findAll('td') for tr in coursesTable.findAll('tr')]
-	outputfile = open('CourseList.csv','w')
+	outputfile = open('data/CourseList.csv','w')
 	for row in rows:
 		row = unicode.join(u'\n',map(unicode,row))
 		row = clean_html(row)
@@ -40,14 +40,14 @@ def courses_list(userid,password):
 		outputfile.write(row+'\n')
 	outputfile.close()
 
-def registered_student_by_course(userid,password):
-	df = pd.read_csv('CourseList.csv')
+def registered_student_by_course(my_userid,my_passkey):
+	df = pd.read_csv('data/CourseList.csv')
 	driver = webdriver.Firefox()
 	driver.get('https://academics1.iitd.ac.in')
 	userElem = driver.find_element_by_name('username')
-	userElem.send_keys(userid)
+	userElem.send_keys(my_userid)
 	passElem = driver.find_element_by_name('password')
-	passElem.send_keys(password)
+	passElem.send_keys(my_passkey)
 	login = driver.find_element_by_name('submit-button')
 	login.click()
 	link = driver.find_element_by_link_text('List of Registered Students in a Course Ist Semester 20172018')
@@ -59,7 +59,7 @@ def registered_student_by_course(userid,password):
 		input = driver.find_element_by_name('EntryNumber')
 		input.send_keys(code)
 		input.send_keys(Keys.RETURN)
-		fileName = code+'.csv'
+		fileName = 'data/'+ code+'.csv'
 		time.sleep(2.5)
 		html = driver.page_source
 		soup = BS(html,"html.parser")
@@ -78,7 +78,7 @@ def registered_student_by_course(userid,password):
 		outputfile.close()
 
 def firstName2gender():
-	df = pd.read_csv('CourseList.csv')
+	df = pd.read_csv('data/CourseList.csv')
 	codeList = df['Course Code'].unique()
 	studentList = set()
 	for code in codeList:
@@ -89,7 +89,7 @@ def firstName2gender():
 	counter = 0
 	inputList = []
 	outList = []
-	output_file_name = 'firstname2gender.csv'
+	output_file_name = 'data/firstname2gender.csv'
 	outputfile = open(output_file_name,'w')
 	outputfile.write('Name,Gender\n')
 	for name in studentList:
